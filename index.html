@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ChartVision â AI-Powered Trading Analysis</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #0d0d0f;
+      --surface: #16161a;
+      --card:    #1e1e24;
+      --border:  #2a2a35;
+      --accent:  #4f8ef7;
+      --accent2: #7c5cfc;
+      --green:   #30d158;
+      --red:     #ff453a;
+      --gold:    #ffd60a;
+      --text:    #f0f0f5;
+      --text2:   #8e8ea0;
+      --text3:   #5a5a70;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ââ NAV ââ */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13,13,15,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+    }
+    .nav-logo {
+      font-size: 1.2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a {
+      color: var(--text2);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    /* ââ HERO ââ */
+    .hero {
+      text-align: center;
+      padding: 100px 2rem 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: -200px; left: 50%;
+      transform: translateX(-50%);
+      width: 800px; height: 600px;
+      background: radial-gradient(ellipse, rgba(79,142,247,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .badge {
+      display: inline-block;
+      background: rgba(79,142,247,0.15);
+      border: 1px solid rgba(79,142,247,0.3);
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 1.05;
+      margin-bottom: 24px;
+    }
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      color: var(--text2);
+      max-width: 600px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+    .hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.2s, transform 0.2s;
+      display: inline-block;
+    }
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-secondary {
+      background: transparent;
+      color: var(--text2);
+      border: 1px solid var(--border);
+      padding: 14px 32px;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+      display: inline-block;
+    }
+    .btn-secondary:hover { border-color: var(--text3); color: var(--text); }
+
+    /* ââ TICKER BAR ââ */
+    .ticker-bar {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 0;
+      overflow: hidden;
+      position: relative;
+    }
+    .ticker-inner {
+      display: flex;
+      gap: 3rem;
+      animation: scroll-ticker 30s linear infinite;
+      white-space: nowrap;
+      width: max-content;
+    }
+    .ticker-item { font-size: 0.85rem; color: var(--text2); }
+    .ticker-item .up   { color: var(--green); }
+    .ticker-item .down { color: var(--red); }
+    @keyframes scroll-ticker {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ââ FEATURES ââ */
+    section { padding: 80px 2rem; max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+    }
+    .section-sub {
+      color: var(--text2);
+      font-size: 1.05rem;
+      max-width: 520px;
+      margin-bottom: 56px;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .feature-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      transition: border-color 0.2s;
+    }
+    .feature-card:hover { border-color: rgba(79,142,247,0.4); }
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 16px;
+    }
+    .feature-card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .feature-card p { color: var(--text2); font-size: 0.9rem; line-height: 1.6; }
+
+    /* ââ HOW IT WORKS ââ */
+    .steps { display: flex; flex-direction: column; gap: 0; }
+    .step {
+      display: flex;
+      gap: 28px;
+      align-items: flex-start;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .step:last-child { border-bottom: none; }
+    .step-num {
+      flex-shrink: 0;
+      width: 44px; height: 44px;
+      background: rgba(79,142,247,0.12);
+      border: 1px solid rgba(79,142,247,0.3);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800;
+      color: var(--accent);
+      font-size: 1rem;
+    }
+    .step h3 { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+    .step p  { color: var(--text2); font-size: 0.9rem; }
+
+    /* ââ DISCLAIMER SECTION ââ */
+    #disclaimer {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 2rem 40px;
+    }
+    .disclaimer-box {
+      background: rgba(255,69,58,0.06);
+      border: 1px solid rgba(255,69,58,0.25);
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 32px;
+    }
+    .disclaimer-box h2 {
+      color: var(--red);
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .disclaimer-box ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .disclaimer-box ul li {
+      color: var(--text2);
+      font-size: 0.9rem;
+      padding-left: 20px;
+      position: relative;
+      line-height: 1.6;
+    }
+    .disclaimer-box ul li::before {
+      content: "â¢";
+      position: absolute;
+      left: 0;
+      color: var(--red);
+    }
+
+    /* ââ DOWNLOAD FORM ââ */
+    #download {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 2rem 100px;
+    }
+    .download-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px;
+    }
+    .download-card h2 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+    .download-card .sub {
+      color: var(--text2);
+      font-size: 0.9rem;
+      margin-bottom: 32px;
+    }
+    .form-group { margin-bottom: 20px; }
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text2);
+      margin-bottom: 8px;
+      letter-spacing: 0.3px;
+    }
+    .form-group input[type="text"],
+    .form-group input[type="email"] {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      color: var(--text);
+      font-size: 0.95rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus {
+      border-color: var(--accent);
+    }
+    .form-group input::placeholder { color: var(--text3); }
+
+    /* Terms scroll box */
+    .terms-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      height: 220px;
+      overflow-y: auto;
+      font-size: 0.82rem;
+      color: var(--text2);
+      line-height: 1.7;
+      margin-bottom: 16px;
+      scroll-behavior: smooth;
+    }
+    .terms-box::-webkit-scrollbar { width: 6px; }
+    .terms-box::-webkit-scrollbar-track { background: transparent; }
+    .terms-box::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    .terms-box h3 { color: var(--text); font-size: 0.9rem; margin-bottom: 10px; }
+    .terms-box p  { margin-bottom: 12px; }
+
+    /* Checkbox */
+    .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .checkbox-row input[type="checkbox"] {
+      flex-shrink: 0;
+      width: 18px; height: 18px;
+      margin-top: 2px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+    .checkbox-row label {
+      font-size: 0.85rem;
+      color: var(--text2);
+      cursor: pointer;
+      line-height: 1.5;
+    }
+    .checkbox-row label span { color: var(--accent); }
+
+    /* Download button */
+    #download-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      border: none;
+      padding: 16px;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    #download-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+    #download-btn:not(:disabled):hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+    .download-note {
+      text-align: center;
+      color: var(--text3);
+      font-size: 0.78rem;
+      margin-top: 16px;
+    }
+
+    /* ââ SUCCESS ââ */
+    #success-msg {
+      display: none;
+      text-align: center;
+      padding: 32px;
+    }
+    #success-msg .icon { font-size: 3rem; margin-bottom: 16px; }
+    #success-msg h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; }
+    #success-msg p { color: var(--text2); font-size: 0.9rem; line-height: 1.6; }
+    #success-msg .name-display {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* ââ REQUIREMENTS ââ */
+    .req-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 32px;
+    }
+    .req-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 0.85rem;
+    }
+    .req-item .req-icon { font-size: 1.4rem; margin-bottom: 8px; }
+    .req-item strong { display: block; color: var(--text); margin-bottom: 4px; }
+    .req-item span { color: var(--text2); }
+
+    /* ââ FOOTER ââ */
+    footer {
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 40px 2rem;
+      color: var(--text3);
+      font-size: 0.82rem;
+      line-height: 1.8;
+    }
+    footer a { color: var(--text3); text-decoration: none; }
+    footer a:hover { color: var(--text2); }
+
+    @media (max-width: 600px) {
+      nav { padding: 0 1rem; }
+      .nav-links { display: none; }
+      .hero { padding: 70px 1rem 60px; }
+      section { padding: 60px 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">â¡ ChartVision</div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#how-it-works">How It Works</a>
+    <a href="#disclaimer">Disclaimer</a>
+    <a href="#download">Download</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="badge">Free â¢ Open Source â¢ Educational Use Only</div>
+  <h1>AI-Powered<br/><span>Chart Analysis</span><br/>for Traders</h1>
+  <p>ChartVision uses Claude Vision AI and a 17-agent swarm to analyze TradingView charts using ICT/Smart Money Concepts â automatically, every 10 seconds.</p>
+  <div class="hero-btns">
+    <a href="#download" class="btn-primary">â¬ Download Free</a>
+    <a href="#features" class="btn-secondary">See Features</a>
+  </div>
+</div>
+
+<!-- TICKER BAR -->
+<div class="ticker-bar">
+  <div class="ticker-inner">
+    <span class="ticker-item">QQQ <span class="up">â² 0.42%</span></span>
+    <span class="ticker-item">SPY <span class="down">â¼ 0.18%</span></span>
+    <span class="ticker-item">SPX <span class="up">â² 0.31%</span></span>
+    <span class="ticker-item">/NQ <span class="up">â² 0.55%</span></span>
+    <span class="ticker-item">/ES <span class="up">â² 0.28%</span></span>
+    <span class="ticker-item">/MNQ <span class="down">â¼ 0.12%</span></span>
+    <span class="ticker-item">BTC <span class="up">â² 1.2%</span></span>
+    <span class="ticker-item">ETH <span class="down">â¼ 0.7%</span></span>
+    <span class="ticker-item">AAPL <span class="up">â² 0.22%</span></span>
+    <span class="ticker-item">TSLA <span class="up">â² 0.88%</span></span>
+    <span class="ticker-item">QQQ <span class="up">â² 0.42%</span></span>
+    <span class="ticker-item">SPY <span class="down">â¼ 0.18%</span></span>
+    <span class="ticker-item">SPX <span class="up">â² 0.31%</span></span>
+    <span class="ticker-item">/NQ <span class="up">â² 0.55%</span></span>
+    <span class="ticker-item">/ES <span class="up">â² 0.28%</span></span>
+    <span class="ticker-item">/MNQ <span class="down">â¼ 0.12%</span></span>
+    <span class="ticker-item">BTC <span class="up">â² 1.2%</span></span>
+    <span class="ticker-item">ETH <span class="down">â¼ 0.7%</span></span>
+    <span class="ticker-item">AAPL <span class="up">â² 0.22%</span></span>
+    <span class="ticker-item">TSLA <span class="up">â² 0.88%</span></span>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-label">What It Does</div>
+  <h2 class="section-title">Everything your trading<br/>setup needs</h2>
+  <p class="section-sub">A fully automated AI analysis engine running directly on your Mac â no subscriptions, no cloud fees.</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">ð¤</div>
+      <h3>17-Agent AI Swarm</h3>
+      <p>Bias, Entry, Volume, Momentum, Risk, Scalp, Sentiment, Liquidity Map, MTF Confluence, ICT Pattern, Divergence, and more â all running in parallel.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">ð</div>
+      <h3>ICT / Smart Money Strategy</h3>
+      <p>Strictly follows ICT methodology: BOS â pullback â FVG/OB entry â LTF confirmation. A 6-step checklist must pass before any signal fires.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">â¡</div>
+      <h3>Auto Screenshot & Analyze</h3>
+      <p>Takes a screenshot of your TradingView 4-chart layout every 10 seconds and runs it through Claude Vision AI for real-time analysis.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">ð</div>
+      <h3>Bias Stability Lock</h3>
+      <p>Requires 3 consecutive same-direction scans before flipping the HTF bias, preventing flip-flopping on small 5M candle noise.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">ð</div>
+      <h3>Options + Futures Support</h3>
+      <p>Supports QQQ, SPY, SPX options and outright futures / futures options for /MNQ, /MES, /NQ, /ES, /GC, /CL and more via TastyTrade.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">ð§ </div>
+      <h3>Scan Memory & Continuity</h3>
+      <p>The AI builds situational awareness across scans â tracking which ICT checklist steps passed, which are missing, and how long a setup has been building.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">ð¡ï¸</div>
+      <h3>Risk Manager Agent</h3>
+      <p>Dedicated risk agent evaluates every setup for R:R quality, obstacles to target, and stop quality â vetoing low-probability trades automatically.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">ðï¸</div>
+      <h3>News Guard + Kill Zones</h3>
+      <p>Automatically blocks trades before high-impact economic events and scores session quality based on ICT kill zones (London, NY, Overlap).</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">ð¾</div>
+      <h3>Trade Memory & Stats</h3>
+      <p>Stores every trade in SQLite, tracks win rate by setup type, and feeds historical performance into the strategy analyst agent.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how-it-works">
+  <div class="section-label">Setup Guide</div>
+  <h2 class="section-title">Up and running in minutes</h2>
+  <p class="section-sub">ChartVision runs locally on your Mac. You'll need a few free accounts to get started.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <h3>Get a Claude API Key</h3>
+        <p>Sign up at <strong>console.anthropic.com</strong> and create an API key. ChartVision uses Claude Vision to analyze your charts. Add funds to your account (usage is typically $0.01â0.05 per scan).</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <h3>Set Up TradingView</h3>
+        <p>Open TradingView and create a 4-panel layout: <strong>4H Â· 1H Â· 15M Â· 5M</strong> for your chosen symbol (QQQ, SPY, /NQ, etc.). Position the window exactly where ChartVision will capture it.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <h3>Install Python 3 Dependencies</h3>
+        <p>Run: <code style="background:rgba(255,255,255,0.07);padding:2px 8px;border-radius:6px;font-size:0.85em;">pip3 install anthropic pillow requests</code> in your Mac terminal. Python 3.10+ required.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <h3>(Optional) Connect TastyTrade</h3>
+        <p>Enter your TastyTrade credentials in ChartVision Settings to enable live trade execution for options and futures. Paper trading mode is available without credentials.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div>
+        <h3>Launch & Monitor</h3>
+        <p>Run <code style="background:rgba(255,255,255,0.07);padding:2px 8px;border-radius:6px;font-size:0.85em;">python3 chart_vision_app.py</code>, paste your API key in Settings, select your symbol, and press Monitor. The AI will analyze every 10 seconds.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Requirements -->
+  <div class="req-grid">
+    <div class="req-item">
+      <div class="req-icon">ð»</div>
+      <strong>macOS or Windows</strong>
+      <span>macOS 12+ Â· Windows 10/11</span>
+    </div>
+    <div class="req-item">
+      <div class="req-icon">ð</div>
+      <strong>Python 3.10+</strong>
+      <span>Free from python.org</span>
+    </div>
+    <div class="req-item">
+      <div class="req-icon">ð</div>
+      <strong>Anthropic API Key</strong>
+      <span>console.anthropic.com</span>
+    </div>
+    <div class="req-item">
+      <div class="req-icon">ð</div>
+      <strong>TradingView</strong>
+      <span>Free account works</span>
+    </div>
+    <div class="req-item">
+      <div class="req-icon">ð¼</div>
+      <strong>TastyTrade (Optional)</strong>
+      <span>For live execution only</span>
+    </div>
+  </div>
+</section>
+
+<!-- DISCLAIMER -->
+<div id="disclaimer">
+  <div class="disclaimer-box">
+    <h2>â ï¸ Educational Use Only â Important Disclaimer</h2>
+    <ul>
+      <li><strong>ChartVision is provided solely for educational and informational purposes.</strong> It is not a licensed financial advisory service, investment advisor, broker-dealer, or trading system.</li>
+      <li>No signals, outputs, or analysis produced by ChartVision should be construed as financial advice, investment recommendations, or solicitations to buy or sell any financial instrument.</li>
+      <li><strong>All trading involves substantial risk of loss.</strong> Options and futures trading carries especially high risk and is not suitable for all investors. You can lose more than your initial investment.</li>
+      <li>Past performance of any trading strategy or AI signal, whether hypothetical or actual, does not guarantee future results.</li>
+      <li>The AI agents analyze chart images and apply pattern recognition â they are not infallible, not always accurate, and should never be your sole basis for any trading decision.</li>
+      <li><strong>You are solely responsible</strong> for any trades you place, any losses you incur, and any decisions you make based on the outputs of this software.</li>
+      <li>By downloading ChartVision you acknowledge you have read, understood, and agreed to these terms and the full Terms of Use below.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- DOWNLOAD FORM -->
+<div id="download">
+  <div class="download-card" id="form-card">
+    <h2>â¬ Download ChartVision</h2>
+    <p class="sub">Free forever. Please read and accept the terms below before downloading.</p>
+
+    <!--
+      Netlify Forms: the "netlify" attribute tells Netlify to intercept this
+      submission and store it in your dashboard. No backend code needed.
+      The form submits, Netlify saves the data, then JS triggers the download.
+    -->
+    <form
+      name="chartvision-download"
+      method="POST"
+      data-netlify="true"
+      netlify-honeypot="bot-field"
+      id="download-form"
+      onsubmit="handleDownload(event)"
+    >
+      <!-- Hidden fields required by Netlify -->
+      <input type="hidden" name="form-name" value="chartvision-download" />
+      <p style="display:none;">
+        <label>Don't fill this out: <input name="bot-field" /></label>
+      </p>
+      <input type="hidden" name="agreed_to_terms" value="true" />
+      <input type="hidden" name="terms_version" value="April 2026" />
+      <input type="hidden" id="timestamp-field" name="timestamp" value="" />
+
+      <div class="form-group">
+        <label>Your Full Name *</label>
+        <input type="text" id="user-name" name="full_name"
+               placeholder="Enter your full name" autocomplete="name" required />
+      </div>
+
+      <div class="form-group">
+        <label>Email Address * <span style="color:var(--text3);font-weight:400;">(for update notifications)</span></label>
+        <input type="email" id="user-email" name="email"
+               placeholder="you@example.com" autocomplete="email" required />
+      </div>
+
+      <div class="form-group">
+        <label>Terms of Use â Please Read in Full</label>
+        <div class="terms-box" id="terms-scroll">
+          <h3>ChartVision â Terms of Use &amp; Release of Liability</h3>
+          <p>Last updated: April 2026</p>
+
+          <p><strong>1. Educational Purpose Only.</strong> ChartVision ("the Software") is provided exclusively for educational, research, and informational purposes. The Software is not a registered investment advisor, financial planner, broker, or any other type of licensed financial professional. Nothing produced by the Software constitutes financial advice, investment advice, trading recommendations, or any other type of advice.</p>
+
+          <p><strong>2. No Warranties.</strong> The Software is provided "AS IS" and "AS AVAILABLE" without any warranty of any kind, express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, accuracy, reliability, or non-infringement. The creators and distributors of the Software make no representations that the Software will be error-free, uninterrupted, or that any information generated is accurate, complete, or timely.</p>
+
+          <p><strong>3. Assumption of Risk.</strong> You acknowledge and agree that trading financial instruments â including but not limited to stocks, options, futures, futures options, cryptocurrencies, and foreign exchange â involves substantial risk of loss and is not appropriate for all individuals. You assume full and complete responsibility for any and all trading decisions you make, whether or not those decisions are influenced by the outputs of the Software.</p>
+
+          <p><strong>4. Release of Liability.</strong> By downloading, installing, or using the Software, you hereby irrevocably release, waive, discharge, and covenant not to sue the creators, developers, distributors, contributors, and any affiliated parties of ChartVision (collectively, "Released Parties") from any and all claims, demands, actions, causes of action, suits, proceedings, liabilities, losses, damages, costs, and expenses of any kind (including attorneys' fees) arising out of or related to: (a) your use or inability to use the Software; (b) any trading decisions made in reliance on the Software's outputs; (c) any financial losses incurred as a result of trading; (d) any errors, inaccuracies, or omissions in the Software's analysis; or (e) any other matter related to the Software.</p>
+
+          <p><strong>5. Indemnification.</strong> You agree to indemnify, defend, and hold harmless the Released Parties from and against any and all claims, liabilities, damages, losses, costs, and expenses (including reasonable attorneys' fees) arising out of or related to your use of the Software, your violation of these Terms, or your violation of any applicable law or regulation.</p>
+
+          <p><strong>6. No Guarantee of Results.</strong> The AI agents within the Software analyze chart images using pattern recognition. This analysis is inherently subjective, may be incorrect, and should not be relied upon as the sole or primary basis for any trading decision. Past performance of any signals or patterns identified by the Software does not guarantee future results.</p>
+
+          <p><strong>7. Compliance with Laws.</strong> You are solely responsible for ensuring your use of the Software and any resulting trading activities comply with all applicable local, state, federal, and international laws and regulations, including but not limited to securities laws and tax obligations.</p>
+
+          <p><strong>8. Third-Party Services.</strong> The Software may integrate with third-party services (Anthropic Claude API, TastyTrade, TradingView). Your use of those services is governed by their respective terms of service. The Released Parties are not responsible for the availability, accuracy, or actions of any third-party service.</p>
+
+          <p><strong>9. Governing Law.</strong> These Terms shall be governed by and construed in accordance with the laws of the United States. Any disputes shall be resolved through binding arbitration, not through class action or jury trial.</p>
+
+          <p><strong>10. Entire Agreement.</strong> These Terms constitute the entire agreement between you and the Released Parties with respect to the Software and supersede all prior or contemporaneous understandings, agreements, representations, or warranties.</p>
+
+          <p style="color:var(--red);font-weight:600;">BY DOWNLOADING THE SOFTWARE YOU CONFIRM YOU HAVE READ, UNDERSTOOD, AND AGREE TO ALL OF THESE TERMS AND THAT YOU WILL NOT HOLD THE CREATORS LIABLE FOR ANY LOSSES, FINANCIAL OR OTHERWISE, ARISING FROM YOUR USE OF THE SOFTWARE.</p>
+        </div>
+      </div>
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="agree-check" name="agreed" value="yes" />
+        <label for="agree-check">
+          I, <span id="name-preview">___</span>, have read the full Terms of Use above,
+          I understand that ChartVision is for <strong>educational purposes only</strong>,
+          I assume all risk for any trades I make, and I
+          <strong>will not hold the creators liable</strong> for any financial losses
+          or damages whatsoever.
+        </label>
+      </div>
+
+      <button type="submit" id="download-btn" disabled>
+        â¬ Download ChartVision â Free
+      </button>
+      <p class="download-note">Python app Â· macOS &amp; Windows Â· Requires Anthropic API key</p>
+    </form>
+  </div>
+
+  <!-- Success Message (shown after form submits) -->
+  <div id="success-msg" class="download-card" style="display:none;">
+    <div class="icon">â</div>
+    <h3>You're all set, <span class="name-display" id="success-name"></span>!</h3>
+    <p>Your download is starting now. Unzip the folder and follow the setup guide above.<br/><br/>
+    <strong>Quick start:</strong><br/>
+    1. Install dependencies:<br/>
+    <code style="background:rgba(255,255,255,0.07);padding:4px 10px;border-radius:6px;display:inline-block;margin:6px 0;">pip3 install anthropic pillow requests mss</code><br/>
+    2. Launch the app:<br/>
+    <code style="background:rgba(255,255,255,0.07);padding:4px 10px;border-radius:6px;display:inline-block;margin:6px 0;">python3 chart_vision_app.py</code><br/>
+    3. Enter your Claude API key in Settings<br/>
+    4. Set your TradingView window position and press Monitor<br/><br/>
+    <a href="#" id="retry-download" style="color:var(--accent);text-decoration:none;font-size:0.9rem;">
+      â¬ Click here if your download didn't start
+    </a><br/><br/>
+    <span style="color:var(--text3);font-size:0.82rem;">
+      You'll receive update notifications at the email you provided.
+    </span>
+    </p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p><strong style="color:var(--text2);">ChartVision</strong></p>
+  <p style="margin-top:8px;">â ï¸ For educational and informational purposes only. Not financial advice.<br/>
+  Trading involves substantial risk of loss. Past performance does not guarantee future results.</p>
+  <p style="margin-top:16px;">
+    <a href="#disclaimer">Disclaimer</a> &nbsp;Â·&nbsp;
+    <a href="#download">Terms of Use</a>
+  </p>
+  <p style="margin-top:16px; color: var(--text3);">Â© 2026 ChartVision. Free & open source.</p>
+</footer>
+
+<script>
+  // âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+  //  CONFIG â paste your GitHub Release download URL here
+  //  Example: https://github.com/yourname/chartvision/releases/download/v1.0/ChartVision.zip
+  // âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+  const DOWNLOAD_URL = "https://github.com/YOUR_USERNAME/chartvision/releases/download/v1.0/ChartVision.zip";
+
+  // ââ Element refs ââââââââââââââââââââââââââââââââââââââââââââââ
+  const nameInput    = document.getElementById("user-name");
+  const emailInput   = document.getElementById("user-email");
+  const namePreview  = document.getElementById("name-preview");
+  const agreeCheck   = document.getElementById("agree-check");
+  const dlBtn        = document.getElementById("download-btn");
+  const form         = document.getElementById("download-form");
+
+  // ââ Live form validation ââââââââââââââââââââââââââââââââââââââ
+  function updateState() {
+    const name  = nameInput.value.trim();
+    const email = emailInput.value.trim();
+    namePreview.textContent = name || "___";
+    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    dlBtn.disabled = !(name.length >= 2 && emailValid && agreeCheck.checked);
+  }
+
+  nameInput.addEventListener("input", updateState);
+  emailInput.addEventListener("input", updateState);
+  agreeCheck.addEventListener("change", updateState);
+
+  // ââ Form submission â Netlify saves data â download fires ââââ
+  async function handleDownload(e) {
+    e.preventDefault();
+
+    const name  = nameInput.value.trim();
+    const email = emailInput.value.trim();
+    if (!name || !email || !agreeCheck.checked) return;
+
+    // Set timestamp for Netlify record
+    document.getElementById("timestamp-field").value = new Date().toISOString();
+
+    // Submit to Netlify Forms via fetch (no page reload)
+    try {
+      const formData = new FormData(form);
+      await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(formData).toString(),
+      });
+    } catch (err) {
+      // Silent fail â still allow download even if Netlify is unreachable
+      console.warn("Form submission error:", err);
+    }
+
+    // Show success card
+    document.getElementById("form-card").style.display = "none";
+    const successEl = document.getElementById("success-msg");
+    successEl.style.display = "block";
+    document.getElementById("success-name").textContent = name.split(" ")[0];
+
+    // Trigger download
+    triggerDownload();
+
+    // Retry link
+    document.getElementById("retry-download").addEventListener("click", function(ev) {
+      ev.preventDefault();
+      triggerDownload();
+    });
+  }
+
+  function triggerDownload() {
+    const a = document.createElement("a");
+    a.href = DOWNLOAD_URL;
+    a.download = "ChartVision.zip";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
+  // ââ Smooth scroll âââââââââââââââââââââââââââââââââââââââââââââ
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener("click", e => {
+      const href = a.getAttribute("href");
+      if (href === "#") return;
+      e.preventDefault();
+      const target = document.querySelector(href);
+      if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+</script>
+
+</body>
+</html>
