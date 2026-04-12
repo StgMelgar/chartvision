@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ChartVision â AI-Powered Trading Analysis</title>
+  <title>ChartVision — AI-Powered Trading Analysis</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -32,7 +32,7 @@
       min-height: 100vh;
     }
 
-    /* ââ NAV ââ */
+    /* ── NAV ── */
     nav {
       position: sticky;
       top: 0;
@@ -63,7 +63,7 @@
     }
     .nav-links a:hover { color: var(--text); }
 
-    /* ââ HERO ââ */
+    /* ── HERO ── */
     .hero {
       text-align: center;
       padding: 100px 2rem 80px;
@@ -141,7 +141,7 @@
     }
     .btn-secondary:hover { border-color: var(--text3); color: var(--text); }
 
-    /* ââ TICKER BAR ââ */
+    /* ── TICKER BAR ── */
     .ticker-bar {
       background: var(--surface);
       border-top: 1px solid var(--border);
@@ -165,7 +165,7 @@
       100% { transform: translateX(-50%); }
     }
 
-    /* ââ FEATURES ââ */
+    /* ── FEATURES ── */
     section { padding: 80px 2rem; max-width: 1100px; margin: 0 auto; }
     .section-label {
       font-size: 0.75rem;
@@ -211,7 +211,7 @@
     }
     .feature-card p { color: var(--text2); font-size: 0.9rem; line-height: 1.6; }
 
-    /* ââ HOW IT WORKS ââ */
+    /* ── HOW IT WORKS ── */
     .steps { display: flex; flex-direction: column; gap: 0; }
     .step {
       display: flex;
@@ -235,7 +235,7 @@
     .step h3 { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
     .step p  { color: var(--text2); font-size: 0.9rem; }
 
-    /* ââ DISCLAIMER SECTION ââ */
+    /* ── DISCLAIMER SECTION ── */
     #disclaimer {
       max-width: 1100px;
       margin: 0 auto;
@@ -271,13 +271,13 @@
       line-height: 1.6;
     }
     .disclaimer-box ul li::before {
-      content: "â¢";
+      content: "•";
       position: absolute;
       left: 0;
       color: var(--red);
     }
 
-    /* ââ DOWNLOAD FORM ââ */
+    /* ── DOWNLOAD FORM ── */
     #download {
       max-width: 680px;
       margin: 0 auto;
@@ -402,7 +402,7 @@
       margin-top: 16px;
     }
 
-    /* ââ SUCCESS ââ */
+    /* ── SUCCESS ── */
     #success-msg {
       display: none;
       text-align: center;
@@ -416,7 +416,7 @@
       font-weight: 700;
     }
 
-    /* ââ REQUIREMENTS ââ */
+    /* ── REQUIREMENTS ── */
     .req-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -434,7 +434,7 @@
     .req-item strong { display: block; color: var(--text); margin-bottom: 4px; }
     .req-item span { color: var(--text2); }
 
-    /* ââ FOOTER ââ */
+    /* ── FOOTER ── */
     footer {
       border-top: 1px solid var(--border);
       text-align: center;
@@ -458,7 +458,7 @@
 
 <!-- NAV -->
 <nav>
-  <div class="nav-logo">â¡ ChartVision</div>
+  <div class="nav-logo">⚡ ChartVision</div>
   <div class="nav-links">
     <a href="#features">Features</a>
     <a href="#how-it-works">How It Works</a>
@@ -469,11 +469,11 @@
 
 <!-- HERO -->
 <div class="hero">
-  <div class="badge">Free â¢ Open Source â¢ Educational Use Only</div>
+  <div class="badge">Free • Open Source • Educational Use Only</div>
   <h1>AI-Powered<br/><span>Chart Analysis</span><br/>for Traders</h1>
-  <p>ChartVision uses Claude Vision AI and a 17-agent swarm to analyze TradingView charts using ICT/Smart Money Concepts â automatically, every 10 seconds.</p>
+  <p>ChartVision uses Claude Vision AI and a 17-agent swarm to analyze TradingView charts using ICT/Smart Money Concepts — automatically, every 10 seconds.</p>
   <div class="hero-btns">
-    <a href="#download" class="btn-primary">â¬ Download Free</a>
+    <a href="#download" class="btn-primary">⬇ Download Free</a>
     <a href="#features" class="btn-secondary">See Features</a>
   </div>
 </div>
@@ -481,26 +481,26 @@
 <!-- TICKER BAR -->
 <div class="ticker-bar">
   <div class="ticker-inner">
-    <span class="ticker-item">QQQ <span class="up">â² 0.42%</span></span>
-    <span class="ticker-item">SPY <span class="down">â¼ 0.18%</span></span>
-    <span class="ticker-item">SPX <span class="up">â² 0.31%</span></span>
-    <span class="ticker-item">/NQ <span class="up">â² 0.55%</span></span>
-    <span class="ticker-item">/ES <span class="up">â² 0.28%</span></span>
-    <span class="ticker-item">/MNQ <span class="down">â¼ 0.12%</span></span>
-    <span class="ticker-item">BTC <span class="up">â² 1.2%</span></span>
-    <span class="ticker-item">ETH <span class="down">â¼ 0.7%</span></span>
-    <span class="ticker-item">AAPL <span class="up">â² 0.22%</span></span>
-    <span class="ticker-item">TSLA <span class="up">â² 0.88%</span></span>
-    <span class="ticker-item">QQQ <span class="up">â² 0.42%</span></span>
-    <span class="ticker-item">SPY <span class="down">â¼ 0.18%</span></span>
-    <span class="ticker-item">SPX <span class="up">â² 0.31%</span></span>
-    <span class="ticker-item">/NQ <span class="up">â² 0.55%</span></span>
-    <span class="ticker-item">/ES <span class="up">â² 0.28%</span></span>
-    <span class="ticker-item">/MNQ <span class="down">â¼ 0.12%</span></span>
-    <span class="ticker-item">BTC <span class="up">â² 1.2%</span></span>
-    <span class="ticker-item">ETH <span class="down">â¼ 0.7%</span></span>
-    <span class="ticker-item">AAPL <span class="up">â² 0.22%</span></span>
-    <span class="ticker-item">TSLA <span class="up">â² 0.88%</span></span>
+    <span class="ticker-item">QQQ <span class="up">▲ 0.42%</span></span>
+    <span class="ticker-item">SPY <span class="down">▼ 0.18%</span></span>
+    <span class="ticker-item">SPX <span class="up">▲ 0.31%</span></span>
+    <span class="ticker-item">/NQ <span class="up">▲ 0.55%</span></span>
+    <span class="ticker-item">/ES <span class="up">▲ 0.28%</span></span>
+    <span class="ticker-item">/MNQ <span class="down">▼ 0.12%</span></span>
+    <span class="ticker-item">BTC <span class="up">▲ 1.2%</span></span>
+    <span class="ticker-item">ETH <span class="down">▼ 0.7%</span></span>
+    <span class="ticker-item">AAPL <span class="up">▲ 0.22%</span></span>
+    <span class="ticker-item">TSLA <span class="up">▲ 0.88%</span></span>
+    <span class="ticker-item">QQQ <span class="up">▲ 0.42%</span></span>
+    <span class="ticker-item">SPY <span class="down">▼ 0.18%</span></span>
+    <span class="ticker-item">SPX <span class="up">▲ 0.31%</span></span>
+    <span class="ticker-item">/NQ <span class="up">▲ 0.55%</span></span>
+    <span class="ticker-item">/ES <span class="up">▲ 0.28%</span></span>
+    <span class="ticker-item">/MNQ <span class="down">▼ 0.12%</span></span>
+    <span class="ticker-item">BTC <span class="up">▲ 1.2%</span></span>
+    <span class="ticker-item">ETH <span class="down">▼ 0.7%</span></span>
+    <span class="ticker-item">AAPL <span class="up">▲ 0.22%</span></span>
+    <span class="ticker-item">TSLA <span class="up">▲ 0.88%</span></span>
   </div>
 </div>
 
@@ -508,50 +508,50 @@
 <section id="features">
   <div class="section-label">What It Does</div>
   <h2 class="section-title">Everything your trading<br/>setup needs</h2>
-  <p class="section-sub">A fully automated AI analysis engine running directly on your Mac â no subscriptions, no cloud fees.</p>
+  <p class="section-sub">A fully automated AI analysis engine running directly on your Mac — no subscriptions, no cloud fees.</p>
   <div class="features-grid">
     <div class="feature-card">
-      <div class="feature-icon">ð¤</div>
+      <div class="feature-icon">🤖</div>
       <h3>17-Agent AI Swarm</h3>
-      <p>Bias, Entry, Volume, Momentum, Risk, Scalp, Sentiment, Liquidity Map, MTF Confluence, ICT Pattern, Divergence, and more â all running in parallel.</p>
+      <p>Bias, Entry, Volume, Momentum, Risk, Scalp, Sentiment, Liquidity Map, MTF Confluence, ICT Pattern, Divergence, and more — all running in parallel.</p>
     </div>
     <div class="feature-card">
-      <div class="feature-icon">ð</div>
+      <div class="feature-icon">📊</div>
       <h3>ICT / Smart Money Strategy</h3>
-      <p>Strictly follows ICT methodology: BOS â pullback â FVG/OB entry â LTF confirmation. A 6-step checklist must pass before any signal fires.</p>
+      <p>Strictly follows ICT methodology: BOS → pullback → FVG/OB entry → LTF confirmation. A 6-step checklist must pass before any signal fires.</p>
     </div>
     <div class="feature-card">
-      <div class="feature-icon">â¡</div>
+      <div class="feature-icon">⚡</div>
       <h3>Auto Screenshot & Analyze</h3>
       <p>Takes a screenshot of your TradingView 4-chart layout every 10 seconds and runs it through Claude Vision AI for real-time analysis.</p>
     </div>
     <div class="feature-card">
-      <div class="feature-icon">ð</div>
+      <div class="feature-icon">🔒</div>
       <h3>Bias Stability Lock</h3>
       <p>Requires 3 consecutive same-direction scans before flipping the HTF bias, preventing flip-flopping on small 5M candle noise.</p>
     </div>
     <div class="feature-card">
-      <div class="feature-icon">ð</div>
+      <div class="feature-icon">📈</div>
       <h3>Options + Futures Support</h3>
       <p>Supports QQQ, SPY, SPX options and outright futures / futures options for /MNQ, /MES, /NQ, /ES, /GC, /CL and more via TastyTrade.</p>
     </div>
     <div class="feature-card">
-      <div class="feature-icon">ð§ </div>
+      <div class="feature-icon">🧠</div>
       <h3>Scan Memory & Continuity</h3>
-      <p>The AI builds situational awareness across scans â tracking which ICT checklist steps passed, which are missing, and how long a setup has been building.</p>
+      <p>The AI builds situational awareness across scans — tracking which ICT checklist steps passed, which are missing, and how long a setup has been building.</p>
     </div>
     <div class="feature-card">
-      <div class="feature-icon">ð¡ï¸</div>
+      <div class="feature-icon">🛡️</div>
       <h3>Risk Manager Agent</h3>
-      <p>Dedicated risk agent evaluates every setup for R:R quality, obstacles to target, and stop quality â vetoing low-probability trades automatically.</p>
+      <p>Dedicated risk agent evaluates every setup for R:R quality, obstacles to target, and stop quality — vetoing low-probability trades automatically.</p>
     </div>
     <div class="feature-card">
-      <div class="feature-icon">ðï¸</div>
+      <div class="feature-icon">🗓️</div>
       <h3>News Guard + Kill Zones</h3>
       <p>Automatically blocks trades before high-impact economic events and scores session quality based on ICT kill zones (London, NY, Overlap).</p>
     </div>
     <div class="feature-card">
-      <div class="feature-icon">ð¾</div>
+      <div class="feature-icon">💾</div>
       <h3>Trade Memory & Stats</h3>
       <p>Stores every trade in SQLite, tracks win rate by setup type, and feeds historical performance into the strategy analyst agent.</p>
     </div>
@@ -568,14 +568,14 @@
       <div class="step-num">1</div>
       <div>
         <h3>Get a Claude API Key</h3>
-        <p>Sign up at <strong>console.anthropic.com</strong> and create an API key. ChartVision uses Claude Vision to analyze your charts. Add funds to your account (usage is typically $0.01â0.05 per scan).</p>
+        <p>Sign up at <strong>console.anthropic.com</strong> and create an API key. ChartVision uses Claude Vision to analyze your charts. Add funds to your account (usage is typically $0.01–0.05 per scan).</p>
       </div>
     </div>
     <div class="step">
       <div class="step-num">2</div>
       <div>
         <h3>Set Up TradingView</h3>
-        <p>Open TradingView and create a 4-panel layout: <strong>4H Â· 1H Â· 15M Â· 5M</strong> for your chosen symbol (QQQ, SPY, /NQ, etc.). Position the window exactly where ChartVision will capture it.</p>
+        <p>Open TradingView and create a 4-panel layout: <strong>4H · 1H · 15M · 5M</strong> for your chosen symbol (QQQ, SPY, /NQ, etc.). Position the window exactly where ChartVision will capture it.</p>
       </div>
     </div>
     <div class="step">
@@ -604,27 +604,27 @@
   <!-- Requirements -->
   <div class="req-grid">
     <div class="req-item">
-      <div class="req-icon">ð»</div>
+      <div class="req-icon">💻</div>
       <strong>macOS or Windows</strong>
-      <span>macOS 12+ Â· Windows 10/11</span>
+      <span>macOS 12+ · Windows 10/11</span>
     </div>
     <div class="req-item">
-      <div class="req-icon">ð</div>
+      <div class="req-icon">🐍</div>
       <strong>Python 3.10+</strong>
       <span>Free from python.org</span>
     </div>
     <div class="req-item">
-      <div class="req-icon">ð</div>
+      <div class="req-icon">🔑</div>
       <strong>Anthropic API Key</strong>
       <span>console.anthropic.com</span>
     </div>
     <div class="req-item">
-      <div class="req-icon">ð</div>
+      <div class="req-icon">📉</div>
       <strong>TradingView</strong>
       <span>Free account works</span>
     </div>
     <div class="req-item">
-      <div class="req-icon">ð¼</div>
+      <div class="req-icon">💼</div>
       <strong>TastyTrade (Optional)</strong>
       <span>For live execution only</span>
     </div>
@@ -634,13 +634,13 @@
 <!-- DISCLAIMER -->
 <div id="disclaimer">
   <div class="disclaimer-box">
-    <h2>â ï¸ Educational Use Only â Important Disclaimer</h2>
+    <h2>⚠️ Educational Use Only — Important Disclaimer</h2>
     <ul>
       <li><strong>ChartVision is provided solely for educational and informational purposes.</strong> It is not a licensed financial advisory service, investment advisor, broker-dealer, or trading system.</li>
       <li>No signals, outputs, or analysis produced by ChartVision should be construed as financial advice, investment recommendations, or solicitations to buy or sell any financial instrument.</li>
       <li><strong>All trading involves substantial risk of loss.</strong> Options and futures trading carries especially high risk and is not suitable for all investors. You can lose more than your initial investment.</li>
       <li>Past performance of any trading strategy or AI signal, whether hypothetical or actual, does not guarantee future results.</li>
-      <li>The AI agents analyze chart images and apply pattern recognition â they are not infallible, not always accurate, and should never be your sole basis for any trading decision.</li>
+      <li>The AI agents analyze chart images and apply pattern recognition — they are not infallible, not always accurate, and should never be your sole basis for any trading decision.</li>
       <li><strong>You are solely responsible</strong> for any trades you place, any losses you incur, and any decisions you make based on the outputs of this software.</li>
       <li>By downloading ChartVision you acknowledge you have read, understood, and agreed to these terms and the full Terms of Use below.</li>
     </ul>
@@ -650,7 +650,7 @@
 <!-- DOWNLOAD FORM -->
 <div id="download">
   <div class="download-card" id="form-card">
-    <h2>â¬ Download ChartVision</h2>
+    <h2>⬇ Download ChartVision</h2>
     <p class="sub">Free forever. Please read and accept the terms below before downloading.</p>
 
     <!--
@@ -688,16 +688,16 @@
       </div>
 
       <div class="form-group">
-        <label>Terms of Use â Please Read in Full</label>
+        <label>Terms of Use — Please Read in Full</label>
         <div class="terms-box" id="terms-scroll">
-          <h3>ChartVision â Terms of Use &amp; Release of Liability</h3>
+          <h3>ChartVision — Terms of Use &amp; Release of Liability</h3>
           <p>Last updated: April 2026</p>
 
           <p><strong>1. Educational Purpose Only.</strong> ChartVision ("the Software") is provided exclusively for educational, research, and informational purposes. The Software is not a registered investment advisor, financial planner, broker, or any other type of licensed financial professional. Nothing produced by the Software constitutes financial advice, investment advice, trading recommendations, or any other type of advice.</p>
 
           <p><strong>2. No Warranties.</strong> The Software is provided "AS IS" and "AS AVAILABLE" without any warranty of any kind, express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, accuracy, reliability, or non-infringement. The creators and distributors of the Software make no representations that the Software will be error-free, uninterrupted, or that any information generated is accurate, complete, or timely.</p>
 
-          <p><strong>3. Assumption of Risk.</strong> You acknowledge and agree that trading financial instruments â including but not limited to stocks, options, futures, futures options, cryptocurrencies, and foreign exchange â involves substantial risk of loss and is not appropriate for all individuals. You assume full and complete responsibility for any and all trading decisions you make, whether or not those decisions are influenced by the outputs of the Software.</p>
+          <p><strong>3. Assumption of Risk.</strong> You acknowledge and agree that trading financial instruments — including but not limited to stocks, options, futures, futures options, cryptocurrencies, and foreign exchange — involves substantial risk of loss and is not appropriate for all individuals. You assume full and complete responsibility for any and all trading decisions you make, whether or not those decisions are influenced by the outputs of the Software.</p>
 
           <p><strong>4. Release of Liability.</strong> By downloading, installing, or using the Software, you hereby irrevocably release, waive, discharge, and covenant not to sue the creators, developers, distributors, contributors, and any affiliated parties of ChartVision (collectively, "Released Parties") from any and all claims, demands, actions, causes of action, suits, proceedings, liabilities, losses, damages, costs, and expenses of any kind (including attorneys' fees) arising out of or related to: (a) your use or inability to use the Software; (b) any trading decisions made in reliance on the Software's outputs; (c) any financial losses incurred as a result of trading; (d) any errors, inaccuracies, or omissions in the Software's analysis; or (e) any other matter related to the Software.</p>
 
@@ -729,15 +729,15 @@
       </div>
 
       <button type="submit" id="download-btn" disabled>
-        â¬ Download ChartVision â Free
+        ⬇ Download ChartVision — Free
       </button>
-      <p class="download-note">Python app Â· macOS &amp; Windows Â· Requires Anthropic API key</p>
+      <p class="download-note">Python app · macOS &amp; Windows · Requires Anthropic API key</p>
     </form>
   </div>
 
   <!-- Success Message (shown after form submits) -->
   <div id="success-msg" class="download-card" style="display:none;">
-    <div class="icon">â</div>
+    <div class="icon">✅</div>
     <h3>You're all set, <span class="name-display" id="success-name"></span>!</h3>
     <p>Your download is starting now. Unzip the folder and follow the setup guide above.<br/><br/>
     <strong>Quick start:</strong><br/>
@@ -748,7 +748,7 @@
     3. Enter your Claude API key in Settings<br/>
     4. Set your TradingView window position and press Monitor<br/><br/>
     <a href="#" id="retry-download" style="color:var(--accent);text-decoration:none;font-size:0.9rem;">
-      â¬ Click here if your download didn't start
+      ⬇ Click here if your download didn't start
     </a><br/><br/>
     <span style="color:var(--text3);font-size:0.82rem;">
       You'll receive update notifications at the email you provided.
@@ -760,23 +760,23 @@
 <!-- FOOTER -->
 <footer>
   <p><strong style="color:var(--text2);">ChartVision</strong></p>
-  <p style="margin-top:8px;">â ï¸ For educational and informational purposes only. Not financial advice.<br/>
+  <p style="margin-top:8px;">⚠️ For educational and informational purposes only. Not financial advice.<br/>
   Trading involves substantial risk of loss. Past performance does not guarantee future results.</p>
   <p style="margin-top:16px;">
-    <a href="#disclaimer">Disclaimer</a> &nbsp;Â·&nbsp;
+    <a href="#disclaimer">Disclaimer</a> &nbsp;·&nbsp;
     <a href="#download">Terms of Use</a>
   </p>
-  <p style="margin-top:16px; color: var(--text3);">Â© 2026 ChartVision. Free & open source.</p>
+  <p style="margin-top:16px; color: var(--text3);">© 2026 ChartVision. Free & open source.</p>
 </footer>
 
 <script>
-  // âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
-  //  CONFIG â paste your GitHub Release download URL here
+  // ─────────────────────────────────────────────────────────────
+  //  CONFIG — paste your GitHub Release download URL here
   //  Example: https://github.com/yourname/chartvision/releases/download/v1.0/ChartVision.zip
-  // âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+  // ─────────────────────────────────────────────────────────────
   const DOWNLOAD_URL = "https://github.com/StgMelgar/chartvision/archive/refs/tags/v1.0.zip";
 
-  // ââ Element refs ââââââââââââââââââââââââââââââââââââââââââââââ
+  // ── Element refs ──────────────────────────────────────────────
   const nameInput    = document.getElementById("user-name");
   const emailInput   = document.getElementById("user-email");
   const namePreview  = document.getElementById("name-preview");
@@ -784,7 +784,7 @@
   const dlBtn        = document.getElementById("download-btn");
   const form         = document.getElementById("download-form");
 
-  // ââ Live form validation ââââââââââââââââââââââââââââââââââââââ
+  // ── Live form validation ──────────────────────────────────────
   function updateState() {
     const name  = nameInput.value.trim();
     const email = emailInput.value.trim();
@@ -797,7 +797,7 @@
   emailInput.addEventListener("input", updateState);
   agreeCheck.addEventListener("change", updateState);
 
-  // ââ Form submission â Netlify saves data â download fires ââââ
+  // ── Form submission → Netlify saves data → download fires ────
   async function handleDownload(e) {
     e.preventDefault();
 
@@ -817,7 +817,7 @@
         body: new URLSearchParams(formData).toString(),
       });
     } catch (err) {
-      // Silent fail â still allow download even if Netlify is unreachable
+      // Silent fail — still allow download even if Netlify is unreachable
       console.warn("Form submission error:", err);
     }
 
@@ -846,7 +846,7 @@
     document.body.removeChild(a);
   }
 
-  // ââ Smooth scroll âââââââââââââââââââââââââââââââââââââââââââââ
+  // ── Smooth scroll ─────────────────────────────────────────────
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener("click", e => {
       const href = a.getAttribute("href");
