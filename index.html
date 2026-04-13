@@ -561,44 +561,115 @@
 <!-- HOW IT WORKS -->
 <section id="how-it-works">
   <div class="section-label">Setup Guide</div>
-  <h2 class="section-title">Up and running in minutes</h2>
-  <p class="section-sub">ChartVision runs locally on your Mac. You'll need a few free accounts to get started.</p>
+  <h2 class="section-title">Step-by-step setup (beginner friendly)</h2>
+  <p class="section-sub">Never used a terminal before? No problem. Follow each step exactly and you'll be up and running in about 10 minutes.</p>
   <div class="steps">
+
     <div class="step">
       <div class="step-num">1</div>
       <div>
-        <h3>Get a Claude API Key</h3>
-        <p>Sign up at <strong>console.anthropic.com</strong> and create an API key. ChartVision uses Claude Vision to analyze your charts. Add funds to your account (usage is typically $0.01–0.05 per scan).</p>
+        <h3>Install Python</h3>
+        <p>Python is the programming language ChartVision runs on. You only need to install it once.</p>
+        <p style="margin-top:8px;"><strong>Mac:</strong> Go to <a href="https://www.python.org/downloads/" target="_blank" style="color:var(--accent);">python.org/downloads</a> and click the big yellow "Download Python 3.x" button. Open the downloaded file and click through the installer.</p>
+        <p style="margin-top:6px;"><strong>Windows:</strong> Same link above. <span style="color:var(--red);font-weight:600;">Important:</span> On the first installer screen, check the box that says "Add Python to PATH" before clicking Install.</p>
       </div>
     </div>
+
     <div class="step">
       <div class="step-num">2</div>
       <div>
-        <h3>Set Up TradingView</h3>
-        <p>Open TradingView and create a 4-panel layout: <strong>4H · 1H · 15M · 5M</strong> for your chosen symbol (QQQ, SPY, /NQ, etc.). Position the window exactly where ChartVision will capture it.</p>
+        <h3>Download &amp; Unzip ChartVision</h3>
+        <p>After downloading from this page, find the <strong>.zip file</strong> in your Downloads folder.</p>
+        <p style="margin-top:6px;"><strong>Mac:</strong> Double-click the zip file to unzip it. You'll see a folder with all the app files inside.</p>
+        <p style="margin-top:6px;"><strong>Windows:</strong> Right-click the zip &rarr; "Extract All" &rarr; click Extract. Remember where you put the folder.</p>
       </div>
     </div>
+
     <div class="step">
       <div class="step-num">3</div>
       <div>
-        <h3>Install Python 3 Dependencies</h3>
-        <p>Run: <code style="background:rgba(255,255,255,0.07);padding:2px 8px;border-radius:6px;font-size:0.85em;">pip3 install anthropic pillow requests</code> in your Mac terminal. Python 3.10+ required.</p>
+        <h3>Open Your Terminal</h3>
+        <p>The terminal is where you'll type commands to install and run ChartVision. It looks like a text window.</p>
+        <p style="margin-top:6px;"><strong>Mac:</strong> Press <code style="background:rgba(255,255,255,0.07);padding:2px 8px;border-radius:6px;font-size:0.85em;">Cmd + Space</code>, type <strong>Terminal</strong>, and hit Enter.</p>
+        <p style="margin-top:6px;"><strong>Windows:</strong> Press <code style="background:rgba(255,255,255,0.07);padding:2px 8px;border-radius:6px;font-size:0.85em;">Win + R</code>, type <strong>cmd</strong>, and hit Enter.</p>
       </div>
     </div>
+
     <div class="step">
       <div class="step-num">4</div>
       <div>
-        <h3>(Optional) Connect TastyTrade</h3>
-        <p>Enter your TastyTrade credentials in ChartVision Settings to enable live trade execution for options and futures. Paper trading mode is available without credentials.</p>
+        <h3>Navigate to the ChartVision Folder</h3>
+        <p>You need to tell the terminal where your ChartVision files are. Type this command and hit Enter:</p>
+        <p style="margin-top:8px;"><strong>Mac:</strong></p>
+        <code style="background:rgba(255,255,255,0.07);padding:6px 12px;border-radius:6px;font-size:0.85em;display:block;margin:4px 0;">cd ~/Downloads/ChartVision-v1.0</code>
+        <p style="margin-top:8px;"><strong>Windows:</strong></p>
+        <code style="background:rgba(255,255,255,0.07);padding:6px 12px;border-radius:6px;font-size:0.85em;display:block;margin:4px 0;">cd %USERPROFILE%\Downloads\ChartVision-v1.0</code>
+        <p style="margin-top:6px;color:var(--text3);font-size:0.85em;">Tip: If your folder name is different, replace "ChartVision-v1.0" with the actual folder name.</p>
       </div>
     </div>
+
     <div class="step">
       <div class="step-num">5</div>
       <div>
-        <h3>Launch & Monitor</h3>
-        <p>Run <code style="background:rgba(255,255,255,0.07);padding:2px 8px;border-radius:6px;font-size:0.85em;">python3 chart_vision_app.py</code>, paste your API key in Settings, select your symbol, and press Monitor. The AI will analyze every 10 seconds.</p>
+        <h3>Install Dependencies</h3>
+        <p>ChartVision needs a few extra tools to work. Copy and paste this command into your terminal and hit Enter:</p>
+        <p style="margin-top:8px;"><strong>Mac:</strong></p>
+        <code style="background:rgba(255,255,255,0.07);padding:6px 12px;border-radius:6px;font-size:0.85em;display:block;margin:4px 0;">pip3 install anthropic pillow requests mss</code>
+        <p style="margin-top:8px;"><strong>Windows:</strong></p>
+        <code style="background:rgba(255,255,255,0.07);padding:6px 12px;border-radius:6px;font-size:0.85em;display:block;margin:4px 0;">pip install anthropic pillow requests mss</code>
+        <p style="margin-top:6px;color:var(--text3);font-size:0.85em;">You'll see text scrolling — that's normal. Wait until it finishes and you see your cursor again.</p>
       </div>
     </div>
+
+    <div class="step">
+      <div class="step-num">6</div>
+      <div>
+        <h3>Get a Claude API Key</h3>
+        <p>ChartVision uses Claude AI to read your charts. You need an API key (like a password that lets the app talk to Claude).</p>
+        <p style="margin-top:6px;">1. Go to <a href="https://console.anthropic.com" target="_blank" style="color:var(--accent);">console.anthropic.com</a> and create a free account</p>
+        <p>2. Click "API Keys" in the sidebar, then "Create Key"</p>
+        <p>3. Copy the key (starts with <code style="background:rgba(255,255,255,0.07);padding:2px 6px;border-radius:4px;font-size:0.85em;">sk-ant-...</code>)</p>
+        <p>4. Add at least $5 in credits under Billing (each chart scan costs about $0.01-0.05)</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">7</div>
+      <div>
+        <h3>Set Up TradingView</h3>
+        <p>ChartVision takes screenshots of your TradingView charts and analyzes them.</p>
+        <p style="margin-top:6px;">1. Go to <a href="https://www.tradingview.com" target="_blank" style="color:var(--accent);">tradingview.com</a> (free account works)</p>
+        <p>2. Open a chart for your symbol (QQQ, SPY, /NQ, etc.)</p>
+        <p>3. Set up a 4-panel layout: <strong>4H &middot; 1H &middot; 15M &middot; 5M</strong></p>
+        <p>4. Position the TradingView window on your screen where you want ChartVision to capture it</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">8</div>
+      <div>
+        <h3>Launch ChartVision</h3>
+        <p>Back in your terminal (make sure you're still in the ChartVision folder), type:</p>
+        <p style="margin-top:8px;"><strong>Mac:</strong></p>
+        <code style="background:rgba(255,255,255,0.07);padding:6px 12px;border-radius:6px;font-size:0.85em;display:block;margin:4px 0;">python3 chart_vision_app.py</code>
+        <p style="margin-top:8px;"><strong>Windows:</strong></p>
+        <code style="background:rgba(255,255,255,0.07);padding:6px 12px;border-radius:6px;font-size:0.85em;display:block;margin:4px 0;">python chart_vision_app.py</code>
+        <p style="margin-top:8px;">The ChartVision window will open. Then:</p>
+        <p>1. Go to <strong>Settings</strong> and paste your Claude API key</p>
+        <p>2. Select your trading symbol</p>
+        <p>3. Click the capture region button to select your TradingView window area</p>
+        <p>4. Press <strong>Monitor</strong> — the AI will start analyzing every 10 seconds</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">9</div>
+      <div>
+        <h3>(Optional) Connect TastyTrade for Live Trading</h3>
+        <p>If you want ChartVision to execute trades automatically, enter your TastyTrade username and password in Settings. Without this, ChartVision runs in <strong>paper trading mode</strong> (simulated trades, no real money).</p>
+      </div>
+    </div>
+
   </div>
 
   <!-- Requirements -->
