@@ -1,0 +1,41 @@
+{
+  "api_key": "",
+  "model": "claude-sonnet-4-5-20250929",
+  "interval_seconds": 1,
+  "region": {
+    "left": 2560,
+    "top": 0,
+    "width": 2560,
+    "height": 1440
+  },
+  "extra_context": "",
+  "watchlist": [
+    "SPY",
+    "QQQ",
+    "AAPL",
+    "TSLA"
+  ],
+  "tt_username": "",
+  "tt_password": "",
+  "alert_rules": {
+    "rsi_overbought": {
+      "enabled": true,
+      "threshold": 70
+    },
+    "rsi_oversold": {
+      "enabled": true,
+      "threshold": 30
+    },
+    "strong_buy": {
+      "enabled": true
+    },
+    "strong_sell": {
+      "enabled": true
+    },
+    "pattern_detected": {
+      "enabled": true
+    }
+  },
+  "etrade_key": "",
+  "etrade_secret": ""
+}
