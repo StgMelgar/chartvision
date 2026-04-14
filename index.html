@@ -582,7 +582,14 @@
       <div class="step-num">3</div>
       <div>
         <h3>Download & Install ChartVision</h3>
-        <p>Click the Download button below. We auto-detect your OS — Mac users get a <strong>.dmg</strong> installer, Windows users get a <strong>.exe</strong>. No Python, no terminal, no dependencies to install.</p>
+        <p>Click the Download button below — we auto-detect your OS and serve the right installer. Native app, no Python or dependencies required.</p>
+        <p style="margin-top:10px;"><strong>Mac users:</strong></p>
+        <p style="margin-left:12px;">1. Open the downloaded <strong>ChartVision-Mac.dmg</strong> file from your Downloads folder (double-click it).</p>
+        <p style="margin-left:12px;">2. A window will open showing the <strong>ChartVision</strong> app icon.</p>
+        <p style="margin-left:12px;">3. Drag the ChartVision icon onto your <strong>Applications</strong> folder (you can also drag it into the Applications shortcut in Finder's sidebar).</p>
+        <p style="margin-top:10px;"><strong>Windows users:</strong></p>
+        <p style="margin-left:12px;">1. Open the downloaded <strong>ChartVision.exe</strong> from your Downloads folder.</p>
+        <p style="margin-left:12px;">2. If Windows SmartScreen appears, click <strong>More info</strong>, then <strong>Run anyway</strong>. (This happens because the app isn't yet signed by a paid developer certificate — the app is safe.)</p>
       </div>
     </div>
     <div class="step">
@@ -596,7 +603,20 @@
       <div class="step-num">5</div>
       <div>
         <h3>Launch & Monitor</h3>
-        <p>Open ChartVision from Applications (Mac) or double-click the .exe (Windows). Paste your API key in Settings, select your symbol, and press Monitor. The AI will analyze every 10 seconds.</p>
+        <p><strong>Mac — First launch (one-time setup):</strong></p>
+        <p style="margin-left:12px;">Because ChartVision isn't yet signed with a paid Apple Developer certificate, macOS will block the first launch with a warning. Here's the 20-second fix:</p>
+        <p style="margin-left:12px; margin-top:8px;">1. Open <strong>Terminal</strong>. Quickest way: press <code style="background:rgba(255,255,255,0.07);padding:2px 8px;border-radius:4px;">Cmd + Space</code>, type <strong>Terminal</strong>, press Enter.</p>
+        <p style="margin-left:12px;">2. Paste this one line into Terminal and press Enter:</p>
+        <p style="margin-left:12px; margin-top:6px;"><code style="background:#1a1a1a;padding:6px 10px;border-radius:6px;color:#7cc7ff;user-select:all;display:inline-block;font-size:0.9em;">xattr -cr /Applications/ChartVision.app &amp;&amp; open /Applications/ChartVision.app</code></p>
+        <p style="margin-left:12px; margin-top:6px; color:var(--text3); font-size:0.88em;">Nothing will print after you press Enter — that's normal. The command tells macOS to trust the app, then launches it. ChartVision should open within a few seconds.</p>
+        <p style="margin-left:12px; margin-top:6px; color:var(--text3); font-size:0.88em;">After this first launch, double-clicking ChartVision from Applications will work normally — you never need to run this command again.</p>
+        <p style="margin-top:12px;"><strong>Windows — First launch:</strong></p>
+        <p style="margin-left:12px;">Double-click ChartVision from your Desktop or Downloads. If SmartScreen appears, click <strong>More info</strong>, then <strong>Run anyway</strong>.</p>
+        <p style="margin-top:12px;"><strong>Once ChartVision is open:</strong></p>
+        <p style="margin-left:12px;">1. Go to <strong>Settings</strong> and paste your Claude API key from Step 1.</p>
+        <p style="margin-left:12px;">2. Select your trading symbol (QQQ, SPY, /NQ, etc.).</p>
+        <p style="margin-left:12px;">3. Click the capture-region button and select your TradingView 4-panel layout.</p>
+        <p style="margin-left:12px;">4. Press <strong>Monitor</strong> — the AI will analyze your charts every 10 seconds.</p>
       </div>
     </div>
   </div>
@@ -824,12 +844,11 @@
         steps.innerHTML = `
           1. Open the downloaded <strong>ChartVision-Mac.dmg</strong> file<br/>
           2. Drag <strong>ChartVision</strong> to your <strong>Applications</strong> folder<br/>
-          3. Open <strong>Terminal</strong> (Cmd+Space, type "Terminal") and paste this one line, then press Enter:<br/>
-          &nbsp;&nbsp;&nbsp;<code style="background:#1a1a1a;padding:4px 8px;border-radius:4px;color:#7cc7ff;user-select:all;">xattr -cr /Applications/ChartVision.app</code><br/>
-          &nbsp;&nbsp;&nbsp;<span style="color:var(--text3);font-size:0.85rem;">(One-time step — tells macOS to trust the app. Nothing will appear after you press Enter — that's normal.)</span><br/>
-          4. Double-click <strong>ChartVision</strong> in Applications to launch<br/>
-          5. Enter your Claude API key in Settings<br/>
-          6. Set your TradingView window position and press Monitor
+          3. Open <strong>Terminal</strong> (Cmd+Space, type "Terminal", press Enter) and paste this one line:<br/>
+          &nbsp;&nbsp;&nbsp;<code style="background:#1a1a1a;padding:4px 8px;border-radius:4px;color:#7cc7ff;user-select:all;">xattr -cr /Applications/ChartVision.app &amp;&amp; open /Applications/ChartVision.app</code><br/>
+          &nbsp;&nbsp;&nbsp;<span style="color:var(--text3);font-size:0.85rem;">(One-time step — trusts the app and launches it. After this, double-click works normally.)</span><br/>
+          4. Enter your Claude API key in Settings<br/>
+          5. Set your TradingView window position and press Monitor
         `;
       } else {
         steps.innerHTML = `
