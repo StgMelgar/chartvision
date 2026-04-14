@@ -5,13 +5,16 @@ on:
     branches: [ main ]
     paths:
       - '**.py'
-      - 'requirements.txt'
+      - '**/requirements.txt'
       - '.github/workflows/build.yml'
   workflow_dispatch:
 
 jobs:
   build-macos:
     runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: "ChartVision-v1.0 3"
     steps:
       - uses: actions/checkout@v4
 
@@ -46,10 +49,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ChartVision-Mac
-          path: dist/ChartVision-Mac.dmg
+          path: "ChartVision-v1.0 3/dist/ChartVision-Mac.dmg"
 
   build-windows:
     runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: "ChartVision-v1.0 3"
     steps:
       - uses: actions/checkout@v4
 
@@ -78,12 +84,14 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ChartVision-Windows
-          path: dist/ChartVision.exe
+          path: "ChartVision-v1.0 3/dist/ChartVision.exe"
 
   create-release:
     needs: [build-macos, build-windows]
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: write
     steps:
       - name: Download Mac artifact
         uses: actions/download-artifact@v4
@@ -107,5 +115,6 @@ jobs:
             ./release/ChartVision.exe
           draft: false
           prerelease: false
+          make_latest: "true"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
