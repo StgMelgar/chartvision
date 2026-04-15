@@ -578,10 +578,11 @@ Respond ONLY with this exact JSON:
 # ──────────────────────────────────────────────────────────────────────────────
 
 ET = ZoneInfo("America/New_York")
+PT = ZoneInfo("America/Los_Angeles")   # California time for user display
 
 # ICT Kill Zones (Eastern Time)
 KILL_ZONES = [
-    {"name": "Asian Session",       "start": (19, 0),  "end": (23, 0),  "quality": "LOW",    "color": "blue"},
+    {"name": "Asian Session",       "start": (19, 0),  "end": (23, 0),  "quality": "MEDIUM", "color": "blue"},
     {"name": "London Open",         "start": (2,  0),  "end": (5,  0),  "quality": "HIGH",   "color": "green"},
     {"name": "NY Pre-Market",       "start": (7,  0),  "end": (9, 30),  "quality": "MEDIUM", "color": "yellow"},
     {"name": "NY Open Kill Zone",   "start": (9, 30),  "end": (11, 0),  "quality": "HIGH",   "color": "green"},
@@ -591,6 +592,26 @@ KILL_ZONES = [
     {"name": "Power Hour",          "start": (15, 0),  "end": (16, 0),  "quality": "HIGH",   "color": "green"},
     {"name": "After Hours",         "start": (16, 0),  "end": (19, 0),  "quality": "AVOID",  "color": "red"},
 ]
+
+# Major market-open countdowns we always track (for the UI).
+# Uses the kill-zone "name" field to find the session start time in ET.
+MAJOR_MARKET_OPENS = [
+    {"label": "Asia",   "session_name": "Asian Session"},
+    {"label": "London", "session_name": "London Open"},
+    {"label": "NY",     "session_name": "NY Open Kill Zone"},
+]
+
+
+def _fmt_countdown(mins: int) -> str:
+    """Format a minutes value as 'Xh YYm' or 'NOW'."""
+    if mins is None:
+        return "?"
+    if mins <= 0:
+        return "NOW"
+    h, m = divmod(mins, 60)
+    if h == 0:
+        return f"{m}m"
+    return f"{h}h {m:02d}m"
 
 # High-impact recurring event TIMES (Eastern) — block 15 min before/after
 HIGH_IMPACT_TIMES_ET = [
@@ -610,6 +631,7 @@ class SessionKillZoneAgent:
 
     def analyze(self) -> dict:
         now_et = datetime.now(ET)
+        now_pt = now_et.astimezone(PT)
         h, m   = now_et.hour, now_et.minute
         mins   = h * 60 + m
 
@@ -620,8 +642,12 @@ class SessionKillZoneAgent:
             eh, em = kz["end"]
             start  = sh * 60 + sm
             end_   = eh * 60 + em
-            # Handle overnight (e.g. 19:00 to 23:00)
-            if start <= mins < end_:
+            # Handle overnight (e.g. 22:00 to 04:00)
+            if end_ < start:
+                in_kz = mins >= start or mins < end_
+            else:
+                in_kz = start <= mins < end_
+            if in_kz:
                 current_session = kz["name"]
                 session_quality = kz["quality"]
                 break
@@ -630,7 +656,7 @@ class SessionKillZoneAgent:
             current_session = "Off-Hours"
             session_quality = "AVOID"
 
-        # Next kill zone
+        # Next kill zone (any HIGH/MEDIUM quality)
         next_kz_name = None
         next_kz_mins = None
         for kz in KILL_ZONES:
@@ -638,11 +664,44 @@ class SessionKillZoneAgent:
                 sh, sm  = kz["start"]
                 start   = sh * 60 + sm
                 diff    = start - mins
-                if diff < 0:
+                if diff <= 0:
                     diff += 24 * 60   # next day
                 if next_kz_mins is None or diff < next_kz_mins:
                     next_kz_mins = diff
                     next_kz_name = kz["name"]
+
+        # Countdowns to major market opens (Asia / London / NY) in minutes.
+        market_countdowns = []
+        for mkt in MAJOR_MARKET_OPENS:
+            kz = next((k for k in KILL_ZONES if k["name"] == mkt["session_name"]), None)
+            if not kz:
+                continue
+            sh, sm = kz["start"]
+            start_mins = sh * 60 + sm
+            # Is this market currently open?
+            eh, em = kz["end"]
+            end_mins = eh * 60 + em
+            if end_mins < start_mins:
+                is_open = mins >= start_mins or mins < end_mins
+            else:
+                is_open = start_mins <= mins < end_mins
+            if is_open:
+                mins_until = 0
+            else:
+                diff = start_mins - mins
+                if diff <= 0:
+                    diff += 24 * 60
+                mins_until = diff
+            # Convert the ET open time to PT for display
+            today = now_et.replace(hour=sh, minute=sm, second=0, microsecond=0)
+            open_pt = today.astimezone(PT).strftime("%I:%M %p PT").lstrip("0")
+            market_countdowns.append({
+                "label":       mkt["label"],
+                "is_open":     is_open,
+                "mins_until":  mins_until,
+                "countdown":   _fmt_countdown(mins_until) if not is_open else "OPEN NOW",
+                "opens_at_pt": open_pt,
+            })
 
         is_good_session = session_quality in ("HIGH", "MEDIUM")
         reason = (
@@ -653,14 +712,16 @@ class SessionKillZoneAgent:
         )
 
         return {
-            "_agent":          "SESSION",
-            "session":         current_session,
-            "session_quality": session_quality,
-            "is_good_session": is_good_session,
-            "next_kill_zone":  next_kz_name,
-            "mins_to_next_kz": next_kz_mins,
-            "current_time_et": now_et.strftime("%H:%M ET"),
-            "reasoning":       reason,
+            "_agent":            "SESSION",
+            "session":           current_session,
+            "session_quality":   session_quality,
+            "is_good_session":   is_good_session,
+            "next_kill_zone":    next_kz_name,
+            "mins_to_next_kz":   next_kz_mins,
+            "current_time_et":   now_et.strftime("%H:%M ET"),
+            "current_time_pt":   now_pt.strftime("%I:%M %p PT").lstrip("0"),
+            "market_countdowns": market_countdowns,
+            "reasoning":         reason,
         }
 
 
