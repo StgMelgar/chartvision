@@ -4463,35 +4463,51 @@ class ChartVisionApp:
 
     def _update_daily_stats(self):
         """Refresh the Live Status daily stats panel labels."""
-        # P&L color — green if positive, red if negative
-        pnl_color = C["green"] if self._today_pnl >= 0 else C["red"]
-        self._stat_pnl.config(
-            text=f"${self._today_pnl:+.0f}",
-            fg=pnl_color
-        )
+        # P&L — show "—" if no trades placed today, otherwise color by sign
+        if self._today_trades == 0:
+            self._stat_pnl.config(text="—", fg=C["text2"])
+        else:
+            pnl_color = C["green"] if self._today_pnl >= 0 else C["red"]
+            self._stat_pnl.config(
+                text=f"${self._today_pnl:+.0f}",
+                fg=pnl_color
+            )
 
-        # Trades count
+        # Trades count — always informative (shows daily capacity)
         self._stat_trades.config(
             text=f"{self._today_trades} / {self._max_trades_per_day}",
             fg=C["text2"]
         )
 
-        # Win rate from memory
+        # Win rate — show "—" until there's actual trade history, avoid misleading 0%
         try:
             s = self.trade_memory.get_summary()
             wr = s.get("win_rate", 0)
             wins = s.get("wins", 0)
             losses = s.get("losses", 0)
-            wr_color = C["green"] if wr >= 50 else C["red"]
-            self._stat_winrate.config(
-                text=f"{wr:.0f}%  ({wins}W {losses}L)",
-                fg=wr_color
-            )
+            total = wins + losses
+            if total == 0:
+                # No trade history yet — show placeholder instead of "0% (0W 0L)"
+                self._stat_winrate.config(text="—  (no trades yet)", fg=C["text2"])
+            else:
+                wr_color = C["green"] if wr >= 50 else C["red"]
+                self._stat_winrate.config(
+                    text=f"{wr:.0f}%  ({wins}W {losses}L)",
+                    fg=wr_color
+                )
         except Exception:
             self._stat_winrate.config(text="—", fg=C["text2"])
 
-        # Streak
-        if self._consecutive_losses > 0:
+        # Streak — only show indicator if there's trade history; otherwise neutral placeholder
+        try:
+            s = self.trade_memory.get_summary()
+            total_trades = s.get("wins", 0) + s.get("losses", 0)
+        except Exception:
+            total_trades = 0
+        if total_trades == 0 and self._consecutive_losses == 0:
+            streak_text  = "—"
+            streak_color = C["text2"]
+        elif self._consecutive_losses > 0:
             streak_text  = f"🔴  {self._consecutive_losses} loss streak"
             streak_color = C["red"]
         else:
