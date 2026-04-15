@@ -1,0 +1,141 @@
+name: Build ChartVision Installers
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '**.py'
+      - '**/requirements.txt'
+      - '.github/workflows/build.yml'
+  workflow_dispatch:
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: "ChartVision-v1.0 3"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller
+          pip install anthropic mss Pillow pandas openpyxl matplotlib requests
+
+      - name: Build Mac app
+        run: |
+          pyinstaller --noconfirm --windowed \
+            --name "ChartVision" \
+            --icon AppIcon.icns \
+            --add-data "strategies:strategies" \
+            --add-data "AppIcon.png:." \
+            --hidden-import tkinter \
+            --hidden-import PIL._tkinter_finder \
+            chart_vision_app.py
+
+      - name: Create DMG
+        run: |
+          cd dist
+          hdiutil create -volname "ChartVision" -srcfolder "ChartVision.app" -ov -format UDZO "ChartVision-Mac.dmg"
+
+      - name: Upload Mac build
+        uses: actions/upload-artifact@v4
+        with:
+          name: ChartVision-Mac
+          path: "ChartVision-v1.0 3/dist/ChartVision-Mac.dmg"
+
+  build-windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: "ChartVision-v1.0 3"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller
+          pip install anthropic mss Pillow pandas openpyxl matplotlib requests
+
+      - name: Build Windows exe
+        run: |
+          pyinstaller --noconfirm --windowed --onefile `
+            --name "ChartVision" `
+            --add-data "strategies;strategies" `
+            --add-data "AppIcon.png;." `
+            --hidden-import tkinter `
+            --hidden-import PIL._tkinter_finder `
+            chart_vision_app.py
+
+      - name: Upload Windows build
+        uses: actions/upload-artifact@v4
+        with:
+          name: ChartVision-Windows
+          path: "ChartVision-v1.0 3/dist/ChartVision.exe"
+
+  create-release:
+    needs: [build-macos, build-windows]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract version from chart_vision_app.py
+        id: version
+        run: |
+          VERSION=$(grep -E '^__version__' "ChartVision-v1.0 3/chart_vision_app.py" | head -1 | sed -E 's/.*"([^"]+)".*/\1/')
+          if [ -z "$VERSION" ]; then
+            echo "Could not detect version; defaulting to 0.0.0"
+            VERSION="0.0.0"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Detected version: $VERSION"
+
+      - name: Download Mac artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ChartVision-Mac
+          path: ./release
+
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ChartVision-Windows
+          path: ./release
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: ChartVision v${{ steps.version.outputs.version }}
+          body: |
+            ## ChartVision v${{ steps.version.outputs.version }}
+
+            Download the installer for your platform below.
+
+            **Mac:** Download `ChartVision-Mac.dmg`, open it, and drag ChartVision to Applications. If you see a security warning, run this in Terminal: `xattr -cr /Applications/ChartVision.app`
+
+            **Windows:** Download `ChartVision.exe` and run it.
+          files: |
+            ./release/ChartVision-Mac.dmg
+            ./release/ChartVision.exe
+          draft: false
+          prerelease: false
+          make_latest: "true"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -80,6 +80,14 @@ from tastytrade_broker import TastytradeBroker, format_positions, format_balance
 from paper_trader import PaperTrader
 from strategy_library import StrategyLibrary
 from trade_memory import TradeMemory
+
+# ────────────────────────────────────────────────────────────────
+#  APP VERSION  —  bump on every release for update banner to fire
+# ────────────────────────────────────────────────────────────────
+__version__ = "1.1.0"
+GITHUB_RELEASES_API = "https://api.github.com/repos/StgMelgar/chartvision/releases/latest"
+GITHUB_RELEASES_PAGE = "https://github.com/StgMelgar/chartvision/releases/latest"
+WEBSITE_URL = "https://chartvision-app.netlify.app/"
 try:
     from agent_system import AgentOrchestrator
     AGENTS_AVAILABLE = True
@@ -1191,6 +1199,83 @@ class ChartVisionApp:
         self._load_saved_settings()
         self._start_watchlist_refresh()
         self._bind_hotkeys()
+
+        # Check for updates in background — banner appears if newer version found
+        threading.Thread(target=self._check_for_updates, daemon=True).start()
+
+    # ──────────────────────────────────────────────────────────
+    #  UPDATE CHECK  (in-app version check + banner)
+    # ──────────────────────────────────────────────────────────
+
+    def _check_for_updates(self):
+        """Fetch latest release tag from GitHub and show banner if newer."""
+        try:
+            import requests
+            r = requests.get(GITHUB_RELEASES_API, timeout=5)
+            if r.status_code != 200:
+                return
+            data = r.json()
+            latest_tag = (data.get("tag_name") or "").lstrip("vV").strip()
+            if not latest_tag:
+                return
+            if self._version_is_newer(latest_tag, __version__):
+                # Schedule UI update on main thread
+                self.root.after(0, lambda: self._show_update_banner(latest_tag))
+        except Exception:
+            # Silent fail — never block the app on update check
+            pass
+
+    @staticmethod
+    def _version_is_newer(latest: str, current: str) -> bool:
+        """Compare semver strings like '1.2.3' — returns True if latest > current."""
+        def parts(v):
+            try:
+                return tuple(int(x) for x in v.split(".")[:3])
+            except Exception:
+                return (0, 0, 0)
+        return parts(latest) > parts(current)
+
+    def _show_update_banner(self, latest_tag: str):
+        """Display a dismissable yellow banner offering to download the update."""
+        if getattr(self, "_update_banner", None):
+            return  # Already shown
+        banner = tk.Frame(self.root, bg="#FFC107", height=38)
+        banner.pack(side=tk.TOP, fill=tk.X, before=self.root.winfo_children()[0])
+        msg = tk.Label(
+            banner,
+            text=f"🆕  ChartVision v{latest_tag} is available — you have v{__version__}",
+            bg="#FFC107", fg="#1a1a1a",
+            font=("Helvetica", 12, "bold"),
+        )
+        msg.pack(side=tk.LEFT, padx=14, pady=6)
+        btn = tk.Button(
+            banner,
+            text="Download Update",
+            bg="#1a1a1a", fg="#FFC107",
+            font=("Helvetica", 11, "bold"),
+            relief="flat", padx=12, pady=2,
+            cursor="hand2",
+            command=lambda: self._open_update_page(),
+        )
+        btn.pack(side=tk.RIGHT, padx=6, pady=4)
+        dismiss = tk.Button(
+            banner,
+            text="✕",
+            bg="#FFC107", fg="#1a1a1a",
+            font=("Helvetica", 11, "bold"),
+            relief="flat", bd=0, cursor="hand2",
+            command=lambda: (banner.destroy(), setattr(self, "_update_banner", None)),
+        )
+        dismiss.pack(side=tk.RIGHT, padx=4, pady=4)
+        self._update_banner = banner
+
+    def _open_update_page(self):
+        """Open the download page in the user's default browser."""
+        import webbrowser
+        try:
+            webbrowser.open(WEBSITE_URL)
+        except Exception:
+            pass
 
     # ──────────────────────────────────────────────────────────
     #  BUILD UI
