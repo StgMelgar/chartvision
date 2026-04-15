@@ -89,10 +89,23 @@ jobs:
   create-release:
     needs: [build-macos, build-windows]
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch'
+    if: github.ref == 'refs/heads/main'
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract version from chart_vision_app.py
+        id: version
+        run: |
+          VERSION=$(grep -E '^__version__' "ChartVision-v1.0 3/chart_vision_app.py" | head -1 | sed -E 's/.*"([^"]+)".*/\1/')
+          if [ -z "$VERSION" ]; then
+            echo "Could not detect version; defaulting to 0.0.0"
+            VERSION="0.0.0"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Detected version: $VERSION"
+
       - name: Download Mac artifact
         uses: actions/download-artifact@v4
         with:
@@ -108,8 +121,16 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: latest
-          name: ChartVision Latest Build
+          tag_name: v${{ steps.version.outputs.version }}
+          name: ChartVision v${{ steps.version.outputs.version }}
+          body: |
+            ## ChartVision v${{ steps.version.outputs.version }}
+
+            Download the installer for your platform below.
+
+            **Mac:** Download `ChartVision-Mac.dmg`, open it, and drag ChartVision to Applications. If you see a security warning, run this in Terminal: `xattr -cr /Applications/ChartVision.app`
+
+            **Windows:** Download `ChartVision.exe` and run it.
           files: |
             ./release/ChartVision-Mac.dmg
             ./release/ChartVision.exe
