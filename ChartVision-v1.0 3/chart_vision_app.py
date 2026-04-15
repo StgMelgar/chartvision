@@ -4654,8 +4654,25 @@ class ChartVisionApp:
                           else C["orange"] if sq == "MEDIUM"
                           else C["red"])
             self._ag_sess_st.config(text=sq, fg=sess_color)
+
+            # Build a compact "Asia 3h 12m · London OPEN · NY 6h 37m" countdown line
+            countdowns = sess.get("market_countdowns", []) or []
+            if countdowns:
+                parts = []
+                for mc in countdowns:
+                    lbl = mc.get("label", "?")
+                    if mc.get("is_open"):
+                        parts.append(f"{lbl} OPEN")
+                    else:
+                        parts.append(f"{lbl} {mc.get('countdown','?')}")
+                cd_line = "  ·  ".join(parts)
+            else:
+                # Fallback to old "next kill zone" display
+                cd_line = f"Next: {sess.get('next_kill_zone','?')} in {sess.get('mins_to_next_kz','?')} min"
+
+            current_time_pt = sess.get("current_time_pt") or sess.get("current_time_et", "")
             self._ag_sess_dt.config(
-                text=f"{sess.get('session','?')}  —  {sess.get('current_time_et','')}  |  Next: {sess.get('next_kill_zone','?')} in {sess.get('mins_to_next_kz','?')} min",
+                text=f"{sess.get('session','?')}  —  {current_time_pt}  |  {cd_line}",
                 fg=C["text2"])
 
         # ── News Guard Agent ──────────────────────────────────────────────────
